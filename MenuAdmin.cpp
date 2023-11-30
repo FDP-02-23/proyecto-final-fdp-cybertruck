@@ -155,3 +155,25 @@ void eliminarParticipante() {
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     cin.get();
 }
+
+// Función para mostrar la informacion de los eventos disponibles.
+void mostrarEventos() {
+    if (eventos.empty()) {
+        cout << "No hay eventos disponibles.\n";
+    } else {
+        for (int i = 0; i < eventos.size(); i++) {
+            cout << "Evento " << i + 1 << ":\n";
+            cout << "Nombre: " << eventos[i].nombre << endl;
+            cout << "Descripcion: " << eventos[i].descripcion << endl;
+            cout << "Fecha: " << eventos[i].fecha << endl;
+            cout << "Lugar: " << eventos[i].lugar << endl;
+            cout << "Hora: " << eventos[i].hora << endl;
+            cout << "Cantidad de Personas: " << eventos[i].cantidadPersonas << endl;
+            cout << "Personas Inscritas: " << eventos[i].inscritos.size() << endl;
+            cout << endl;
+        }
+    }
+    cout << "Presione Enter para continuar...";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cin.get();
+}

@@ -76,3 +76,69 @@ void limpiarPantalla() {
         system("clear"); // En otros sistemas operativos, usa el comando 'clear'
     #endif
 }
+// Declaraciones de funciones adicionales para el manejo de usuarios, eventos y administradores
+
+bool iniciarSesion(bool esAdmin); // Función para iniciar sesión, diferenciando entre admin y usuario normal
+
+void registrarUsuario(bool esAdmin); // Función para registrar un nuevo usuario o administrador
+
+void menuAdmin(); // Función para mostrar el menú de opciones para administradores
+
+void menuUsuario(); // Función para mostrar el menú de opciones para usuarios
+
+void crearEvento(); // Función para crear un nuevo evento
+
+void mostrarEventos(); // Función para mostrar todos los eventos disponibles
+
+void modificarEvento(Evento& e); // Función para modificar un evento existente
+
+void buscarEventosPorSimilitud(); // Función para buscar eventos por similitud en el nombre
+
+void eliminarEvento(int index); // Función para eliminar un evento por su índice
+
+void inscribirseEnEvento(); // Función para que un usuario se inscriba en un evento
+
+void verificarMisEventos(); // Función para que un usuario verifique los eventos en los que está inscrito
+
+void enviarSolicitudEvento(); // Función para enviar una solicitud para un nuevo evento
+
+void verSolicitudesDeEvento(); // Función para ver las solicitudes de eventos (probablemente para administradores)
+
+// Función para iniciar sesión, ya sea como administrador o como usuario regular
+bool iniciarSesion(bool esAdmin) {
+    string username, password;
+    // Solicita el nombre de usuario
+    cout << "Ingrese su nombre de usuario o '0' para regresar: ";
+    cin >> username;
+
+    // Si el usuario ingresa '0', termina la función y regresa al menú anterior
+    if (username == "0") {
+        return false; 
+    }
+
+    // Solicita la contraseña
+    cout << "Ingrese su contrasena: ";
+    cin >> password;
+
+    // Elige entre la lista de administradores o usuarios según el tipo de inicio de sesión
+    vector<Usuario>& listaUsuarios = esAdmin ? administradores : usuarios;
+
+    // Recorre la lista de usuarios para encontrar una coincidencia
+    for (const Usuario& u : listaUsuarios) {
+        // Si encuentra una coincidencia en nombre de usuario y contraseña
+        if (u.username == username && u.password == password) {
+            usuarioActual = username; // Establece el usuario actual
+            cout << "Inicio de sesion exitoso. Presione Enter para continuar...";
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignora el resto de la línea
+            cin.get(); // Espera que el usuario presione Enter
+            return true; // Retorna verdadero, indicando un inicio de sesión exitoso
+        }
+    }
+
+    // Si no se encuentra ninguna coincidencia, muestra un mensaje de error
+    cout << "Error: Usuario no registrado o usuario/contrasena incorrectos.\n";
+    cout << "Presione Enter para continuar...";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignora el resto de la línea
+    cin.get(); // Espera que el usuario presione Enter
+    return false; // Retorna falso, indicando que el inicio de sesión falló
+}

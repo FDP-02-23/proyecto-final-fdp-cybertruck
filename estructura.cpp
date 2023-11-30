@@ -381,3 +381,53 @@ void inscribirseEnEvento() {
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     cin.get();
 }
+// Función para mostrar los usuarios inscritos en un evento específico
+void mostrarInscritosEnEvento() {
+    // Verifica si hay eventos disponibles
+    if (eventos.empty()) {
+        cout << "No hay eventos disponibles.\n";
+        cout << "Presione Enter para continuar...";
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.get();
+        return; // Sale de la función si no hay eventos
+    }
+
+    // Presenta los eventos disponibles y pide al usuario que seleccione uno
+    cout << "Seleccione el número del evento para ver los inscritos o '0' para salir:\n";
+    for (int i = 0; i < eventos.size(); i++) {
+        cout << i + 1 << ". " << eventos[i].nombre << endl;
+    }
+    cout << "0. Salir\n";
+
+    int numEvento;
+    cin >> numEvento; // Recoge la selección del usuario
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Limpia el buffer de entrada
+
+    // Gestiona la opción de salida
+    if (numEvento == 0) {
+        return; // Sale de la función si el usuario elige '0'
+    }
+
+    // Valida la elección del usuario
+    if (numEvento < 1 || numEvento > eventos.size()) {
+        cout << "Número de evento no válido.\n";
+    } else {
+        // Muestra los usuarios inscritos en el evento seleccionado
+        const Evento& eventoSeleccionado = eventos[numEvento - 1];
+        cout << "Personas inscritas en el evento '" << eventoSeleccionado.nombre << "':\n";
+        // Verifica si hay usuarios inscritos en el evento
+        if (eventoSeleccionado.inscritos.empty()) {
+            cout << "No hay personas inscritas en este evento.\n";
+        } else {
+            // Lista los nombres de los usuarios inscritos
+            for (const string& inscrito : eventoSeleccionado.inscritos) {
+                cout << "- " << inscrito << endl;
+            }
+        }
+    }
+
+    // Espera a que el usuario presione Enter para continuar
+    cout << "Presione Enter para continuar...";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cin.get();
+}

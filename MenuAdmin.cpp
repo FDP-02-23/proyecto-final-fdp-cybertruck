@@ -408,3 +408,63 @@ void buscarEventosPorSimilitud() {
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     cin.get();
 }
+
+
+// Funcion para revisar y gestionar las solicitudes de eventos pendientes.
+void revisarSolicitudesEventos() {
+    if (solicitudesEventos.empty()) {
+        cout << "No hay solicitudes de eventos pendientes.\n";
+        cout << "Presione Enter para continuar...";
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.get();
+        return;
+    }
+
+    cout << "Revisando solicitudes de eventos...\n";
+    for (auto& solicitud : solicitudesEventos) {
+        if (solicitud.estado == "Pendiente") {
+            cout << "\nSolicitud de Evento:\n";
+            // Mostrar los detalles de la solicitud pendiente
+            cout << "Nombre: " << solicitud.nombre << "\n";
+            cout << "Descripcion: " << solicitud.descripcion << "\n";
+            cout << "Fecha: " << solicitud.fecha << "\n";
+            cout << "Lugar: " << solicitud.lugar << "\n";
+            cout << "Hora: " << solicitud.hora << "\n";
+            cout << "Cantidad de Personas: " << solicitud.cantidadPersonas << "\n";
+            cout << "Estado actual: " << solicitud.estado << "\n";
+
+            cout << "Ingrese '0' para salir o:\n";
+            cout << "¿Desea aceptar este evento? (s/n): ";
+            char respuesta;
+            cin >> respuesta;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Limpia la entrada
+
+            if (respuesta == '0') {
+                cout << "Saliendo de la revision de solicitudes.\n";
+                return; // Sale de la funcion completamente
+            } else if (respuesta == 's' || respuesta == 'S') {
+                Evento nuevoEvento = {
+                    solicitud.nombre,
+                    solicitud.descripcion,
+                    solicitud.fecha,
+                    solicitud.lugar,
+                    solicitud.hora,
+                    solicitud.cantidadPersonas,
+                    {}, // Lista de inscritos inicialmente vacía
+                    "Activo" // Estado del evento
+                };
+                eventos.push_back(nuevoEvento); // Agregar el evento a la lista de eventos
+                solicitud.estado = "Aceptado"; // Actualizar el estado de la solicitud
+                cout << "Evento aceptado y agregado a la lista de eventos.\n";
+            } else {
+                solicitud.estado = "Rechazado"; // Actualizar el estado de la solicitud
+                cout << "Evento rechazado.\n";
+            }
+            cout << "Presione Enter para continuar...";
+            cin.get(); // Espera a que el usuario presione Enter
+        }
+    }
+}
+
+
+

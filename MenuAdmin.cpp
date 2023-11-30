@@ -99,7 +99,7 @@ void crearEvento() {
 
 void mostrarEventos();
 
-// Función para eliminar un participante de un evento.
+// Funcion para eliminar un participante de un evento.
 void eliminarParticipante() {
     if (eventos.empty()) {
         cout << "No hay eventos disponibles.\n";
@@ -156,7 +156,7 @@ void eliminarParticipante() {
     cin.get();
 }
 
-// Función para mostrar la informacion de los eventos disponibles.
+// Funcion para mostrar la informacion de los eventos disponibles.
 void mostrarEventos() {
     if (eventos.empty()) {
         cout << "No hay eventos disponibles.\n";
@@ -186,7 +186,7 @@ void guardarEventosEnArchivo() {
         cout << "Error al abrir el archivo para escribir.\n";
         return;
     } 
-    // Iterar a través de los eventos y escribir su información en el archivo.
+    // Iterar a traves de los eventos y escribir su informacion en el archivo.
     for (const Evento& e : eventos) {
         archivo << "---------------------------------------------------\n";
         archivo << "Nombre: " << e.nombre << "\n";
@@ -281,6 +281,56 @@ void modificarEvento() {
     if (opcion >= 1 && opcion <= 6) {
         cout << "Evento modificado exitosamente.\n";
     }
+    cout << "Presione Enter para continuar...";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cin.get();
+}
+
+
+
+// Funcion para modificar un evento existente.
+void mostrarInscritosEnEvento() {
+    // Verificar si hay eventos disponibles
+    if (eventos.empty()) {
+        cout << "No hay eventos disponibles.\n";
+        cout << "Presione Enter para continuar...";
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.get();
+        return;
+    }
+
+    // Mostrar la lista de eventos disponibles.
+    cout << "Seleccione el numero del evento para ver los inscritos o '0' para salir:\n";
+    for (int i = 0; i < eventos.size(); i++) {
+        cout << i + 1 << ". " << eventos[i].nombre << endl;
+    }
+    cout << "0. Salir\n";
+
+    int numEvento;
+    cin >> numEvento;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    // Opción de salida
+    if (numEvento == 0) {
+        return;
+    }
+
+    // Validar la eleccion del evento
+    if (numEvento < 1 || numEvento > eventos.size()) {
+        cout << "Número de evento no válido.\n";
+    } else {
+        // Mostrar los inscritos en el evento seleccionado
+        const Evento& eventoSeleccionado = eventos[numEvento - 1];
+        cout << "Personas inscritas en el evento '" << eventoSeleccionado.nombre << "':\n";
+        if (eventoSeleccionado.inscritos.empty()) {
+            cout << "No hay personas inscritas en este evento.\n";
+        } else {
+            for (const string& inscrito : eventoSeleccionado.inscritos) {
+                cout << "- " << inscrito << endl;
+            }
+        }
+    }
+
     cout << "Presione Enter para continuar...";
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     cin.get();

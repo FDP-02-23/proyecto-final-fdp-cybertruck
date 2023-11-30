@@ -142,3 +142,83 @@ bool iniciarSesion(bool esAdmin) {
     cin.get(); // Espera que el usuario presione Enter
     return false; // Retorna falso, indicando que el inicio de sesión falló
 }
+// Función para buscar eventos por similitud según diferentes criterios
+void buscarEventosPorSimilitud() {
+    // Verifica si la lista de eventos está vacía
+    if (eventos.empty()) {
+        cout << "No hay eventos disponibles para buscar.\n";
+        cout << "Presione Enter para continuar...";
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.get();
+        return; // Si está vacía, sale de la función
+    }
+
+    // Presenta opciones de búsqueda al usuario
+    cout << "Buscar evento por:\n";
+    cout << "1. Nombre\n";
+    cout << "2. Lugar\n";
+    cout << "3. Fecha\n";
+    cout << "Seleccione una opcion: ";
+    int opcion;
+    cin >> opcion; // Recoge la opción seleccionada por el usuario
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Limpia el buffer de entrada
+
+    string busqueda; // Almacena el término de búsqueda
+    // Muestra mensajes basados en la opción seleccionada y recoge el término de búsqueda
+    switch (opcion) {
+        case 1:
+            cout << "Ingrese parte del nombre del evento a buscar: ";
+            break;
+        case 2:
+            cout << "Ingrese parte del lugar del evento a buscar: ";
+            break;
+        case 3:
+            cout << "Ingrese parte de la fecha del evento a buscar: ";
+            break;
+        default:
+            cout << "Opcion no valida.\n"; // Manejo de opción inválida
+            return;
+    }
+    getline(cin, busqueda); // Obtiene el término de búsqueda del usuario
+
+    bool encontrado = false; // Bandera para indicar si se encontraron coincidencias
+    // Recorre todos los eventos buscando coincidencias con el término de búsqueda
+    for (const Evento& e : eventos) {
+        bool coincide = false; // Bandera para coincidencias individuales
+        // Busca coincidencias según la opción seleccionada
+        switch (opcion) {
+            case 1:
+                coincide = e.nombre.find(busqueda) != string::npos;
+                break;
+            case 2:
+                coincide = e.lugar.find(busqueda) != string::npos;
+                break;
+            case 3:
+                coincide = e.fecha.find(busqueda) != string::npos;
+                break;
+        }
+
+        // Si se encuentra una coincidencia, muestra los detalles del evento
+        if (coincide) {
+            cout << "* Evento encontrado:  *\n";
+            cout << "* Nombre:  *" << e.nombre << "\n";
+            cout << "* Descripcion: *" << e.descripcion << "\n";
+            cout << "* Fecha:  *" << e.fecha << "\n";
+            cout << "* Lugar:  *" << e.lugar << "\n";
+            cout << "* Hora:  *" << e.hora << "\n";
+            cout << "* Cantidad de Personas:  *" << e.cantidadPersonas << "\n";
+            cout << "------------------------------\n";
+            encontrado = true; // Actualiza la bandera a verdadero
+        }
+    }
+
+    // Si no se encontraron coincidencias, muestra un mensaje
+    if (!encontrado) {
+        cout << "No se encontraron eventos con esos criterios.\n";
+    }
+
+    // Espera a que el usuario presione Enter para continuar
+    cout << "Presione Enter para continuar...";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cin.get();
+}

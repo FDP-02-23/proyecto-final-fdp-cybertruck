@@ -298,3 +298,86 @@ void enviarSolicitudEvento() {
     cout << "Presione Enter para continuar...";
     cin.get();
 }
+// Función para que los usuarios se inscriban en un evento
+void inscribirseEnEvento() {
+    // Verifica si hay eventos disponibles
+    if (eventos.empty()) {
+        cout << "No hay eventos disponibles para inscribirse.\n";
+        cout << "Presione Enter para continuar...";
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.get();
+        return; // Sale de la función si no hay eventos
+    }
+
+    int opcion;
+    // Presenta opciones para buscar un evento
+    cout << "Como desea buscar el evento para inscribirse?\n";
+    cout << "1. Listar todos los eventos\n";
+    cout << "2. Buscar evento por similitud\n";
+    cout << "0. Salir\n"; // Opción para salir
+    cout << "Seleccione una opcion o '0' para salir: ";
+    cin >> opcion;
+
+    // Si el usuario elige salir, termina la función
+    if (opcion == 0) {
+        return;
+    }
+
+    vector<Evento*> eventosEncontrados; // Vector para almacenar eventos encontrados
+    switch (opcion) {
+        case 1:
+            // Lista todos los eventos disponibles
+            for (Evento& e : eventos) {
+                eventosEncontrados.push_back(&e);
+            }
+            break;
+        case 2:
+            // Busca eventos por similitud
+            eventosEncontrados = ObtenerEventosPorSimilitud();
+            break;
+        default:
+            cout << "Opcion no valida.\n";
+            return;
+    }
+
+    // Verifica si se encontraron eventos
+    if (eventosEncontrados.empty()) {
+        cout << "No se encontraron eventos.\n";
+        return;
+    }
+
+    // Presenta los eventos encontrados al usuario
+    cout << "Seleccione el numero del evento al que desea inscribirse o '0' para salir:\n";
+    for (int i = 0; i < eventosEncontrados.size(); ++i) {
+        cout << i + 1 << ". " << eventosEncontrados[i]->nombre << "\n";
+    }
+    cout << "0. Salir\n";
+
+    int numEvento;
+    cin >> numEvento; // Recoge la elección del usuario
+
+    // Gestiona la elección del usuario
+    if (numEvento == 0) {
+        return; // Sale si el usuario elige '0'
+    } else if (numEvento < 1 || numEvento > eventosEncontrados.size()) {
+        cout << "Numero de evento no valido.\n";
+        return;
+    }
+
+    // Obtiene el evento seleccionado
+    Evento* eventoSeleccionado = eventosEncontrados[numEvento - 1];
+    // Verifica si el usuario ya está inscrito en el evento
+    if (find(eventoSeleccionado->inscritos.begin(), eventoSeleccionado->inscritos.end(), usuarioActual) != eventoSeleccionado->inscritos.end()) {
+        cout << "Ya estas inscrito en este evento.\n";
+    } else {
+        // Si no está inscrito, lo añade a la lista de inscritos
+        eventoSeleccionado->inscritos.push_back(usuarioActual);
+        cout << "Inscripcion exitosa en el evento: " << eventoSeleccionado->nombre << "\n";
+        cout << "Total de personas inscritas ahora: " << eventoSeleccionado->inscritos.size() << "\n";
+    }
+
+    // Espera a que el usuario presione Enter para continuar
+    cout << "Presione Enter para continuar...";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cin.get();
+}

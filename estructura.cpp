@@ -431,3 +431,22 @@ void mostrarInscritosEnEvento() {
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     cin.get();
 }
+int main() {
+    int opcion;
+    bool salir = false;
+
+    do {
+        limpiarPantalla();
+        // Mostrar las opciones del menú
+        cout << "\nMenu Principal:\n";
+        cout << "1. Iniciar Sesion\n";
+        cout << "2. Buscar Eventos Por Similitud\n";
+        cout << "3. Ver Solicitudes De Evento\n";
+        cout << "4. Enviar Solicitud De Evento\n";
+        cout << "5. Revisar Solicitudes Eventos\n";
+        cout << "6. Inscribirse En Evento\n";
+        cout << "7. Mostrar Inscritos En Evento\n";
+        cout << "8. Salir\n";
+        cout << "Seleccione una opcion: ";
+        cin >> opcion;
+      limpiarPantalla();

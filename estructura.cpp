@@ -76,6 +76,7 @@ void limpiarPantalla() {
         system("clear"); // En otros sistemas operativos, usa el comando 'clear'
     #endif
 }
+
 // Declaraciones de funciones adicionales para el manejo de usuarios, eventos y administradores
 
 bool iniciarSesion(bool esAdmin); // Función para iniciar sesión, diferenciando entre admin y usuario normal
@@ -142,6 +143,7 @@ bool iniciarSesion(bool esAdmin) {
     cin.get(); // Espera que el usuario presione Enter
     return false; // Retorna falso, indicando que el inicio de sesión falló
 }
+
 // Función para buscar eventos por similitud según diferentes criterios
 void buscarEventosPorSimilitud() {
     // Verifica si la lista de eventos está vacía
@@ -298,6 +300,68 @@ void enviarSolicitudEvento() {
     cout << "Presione Enter para continuar...";
     cin.get();
 }
+// Función para revisar y gestionar las solicitudes de eventos
+void revisarSolicitudesEventos() {
+    // Verifica si hay solicitudes de eventos pendientes
+    if (solicitudesEventos.empty()) {
+        cout << "No hay solicitudes de eventos pendientes.\n";
+        cout << "Presione Enter para continuar...";
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.get();
+        return; // Sale de la función si no hay solicitudes
+    }
+
+    cout << "Revisando solicitudes de eventos...\n";
+    // Recorre la lista de solicitudes de eventos
+    for (auto& solicitud : solicitudesEventos) {
+        // Procesa solo las solicitudes con estado "Pendiente"
+        if (solicitud.estado == "Pendiente") {
+            // Muestra los detalles de la solicitud pendiente
+            cout << "\nSolicitud de Evento:\n";
+            cout << "Nombre: " << solicitud.nombre << "\n";
+            cout << "Descripcion: " << solicitud.descripcion << "\n";
+            cout << "Fecha: " << solicitud.fecha << "\n";
+            cout << "Lugar: " << solicitud.lugar << "\n";
+            cout << "Hora: " << solicitud.hora << "\n";
+            cout << "Cantidad de Personas: " << solicitud.cantidadPersonas << "\n";
+            cout << "Estado actual: " << solicitud.estado << "\n";
+
+            // Pide al usuario que acepte o rechace la solicitud
+            cout << "Ingrese '0' para salir o:\n";
+            cout << "¿Desea aceptar este evento? (s/n): ";
+            char respuesta;
+            cin >> respuesta;
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Limpia el buffer de entrada
+
+            // Gestiona la respuesta del usuario
+            if (respuesta == '0') {
+                cout << "Saliendo de la revision de solicitudes.\n";
+                return; // Sale de la función completamente
+            } else if (respuesta == 's' || respuesta == 'S') {
+                // Si se acepta la solicitud, crea un nuevo evento
+                Evento nuevoEvento = {
+                    solicitud.nombre,
+                    solicitud.descripcion,
+                    solicitud.fecha,
+                    solicitud.lugar,
+                    solicitud.hora,
+                    solicitud.cantidadPersonas,
+                    {}, // Lista de inscritos inicialmente vacía
+                    "Activo" // Estado del evento
+                };
+                eventos.push_back(nuevoEvento); // Agrega el evento a la lista
+                solicitud.estado = "Aceptado"; // Actualiza el estado de la solicitud
+                cout << "Evento aceptado y agregado a la lista de eventos.\n";
+            } else {
+                // Si se rechaza la solicitud, actualiza su estado
+                solicitud.estado = "Rechazado";
+                cout << "Evento rechazado.\n";
+            }
+            cout << "Presione Enter para continuar...";
+            cin.get(); // Espera a que el usuario presione Enter
+        }
+    }
+}
 // Función para que los usuarios se inscriban en un evento
 void inscribirseEnEvento() {
     // Verifica si hay eventos disponibles
@@ -431,6 +495,7 @@ void mostrarInscritosEnEvento() {
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     cin.get();
 }
+
 int main() {
     int opcion;
     bool salir = false;
@@ -450,3 +515,38 @@ int main() {
         cout << "Seleccione una opcion: ";
         cin >> opcion;
       limpiarPantalla();
+
+        // Procesar la elección del usuario
+        switch (opcion) {
+            case 1:
+                iniciarSesion(false); // Ejemplo, asumiendo que no es admin
+                break;
+            case 2:
+                buscarEventosPorSimilitud();
+                break;
+            case 3:
+                verSolicitudesDeEvento();
+                break;
+            case 4:
+                enviarSolicitudEvento();
+                break;
+            case 5:
+                revisarSolicitudesEventos();
+                break;
+            case 6:
+                inscribirseEnEvento();
+                break;
+            case 7:
+                mostrarInscritosEnEvento();
+                break;
+            case 8:
+                salir = true;
+                break;
+            default:
+                cout << "Opcion no valida. Por favor intente de nuevo.\n";
+        }
+    } while (!salir);
+
+    cout << "Saliendo del programa...\n";
+    return 0;
+}

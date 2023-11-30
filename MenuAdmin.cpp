@@ -177,3 +177,30 @@ void mostrarEventos() {
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     cin.get();
 }
+
+// Funcion para guardar la informacion de los eventos en un archivo de texto.
+void guardarEventosEnArchivo() {
+    // Abrir un archivo llamado 'eventos.txt' para escritura.
+    ofstream archivo("eventos.txt");
+    if (!archivo.is_open()) {
+        cout << "Error al abrir el archivo para escribir.\n";
+        return;
+    } 
+    // Iterar a través de los eventos y escribir su información en el archivo.
+    for (const Evento& e : eventos) {
+        archivo << "---------------------------------------------------\n";
+        archivo << "Nombre: " << e.nombre << "\n";
+        archivo << "Descripcion: " << e.descripcion << "               \n";
+        archivo << "Fecha: " << e.fecha << "                          \n";
+        archivo << "Lugar: " << e.lugar << "                          \n";
+        archivo << "Hora: " << e.hora << "                            \n";
+        archivo << "Cantidad de Personas: " << e.cantidadPersonas << "\n";
+        archivo << "---------------------------------------------------\n";
+    }
+    // Cerrar el archivo después de escribir los datos.
+    archivo.close();
+    cout << "Eventos guardados en 'eventos.txt'.\n";
+    cout << "Presione Enter para continuar...";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cin.get();
+}

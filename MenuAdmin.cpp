@@ -336,3 +336,75 @@ void mostrarInscritosEnEvento() {
     cin.get();
 }
 
+// Funcion para buscar eventos por similitud en nombre, lugar o fecha.
+void buscarEventosPorSimilitud() {
+    if (eventos.empty()) {
+        cout << "No hay eventos disponibles para buscar.\n";
+        cout << "Presione Enter para continuar...";
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.get();
+        return;
+    }
+   // Mostrar opciones de busqueda.
+    cout << "Buscar evento por:\n";
+    cout << "1. Nombre\n";
+    cout << "2. Lugar\n";
+    cout << "3. Fecha\n";
+    cout << "Seleccione una opcion: ";
+    int opcion;
+    cin >> opcion;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    string busqueda;
+    switch (opcion) {
+        case 1:
+            cout << "Ingrese parte del nombre del evento a buscar: ";
+            break;
+        case 2:
+            cout << "Ingrese parte del lugar del evento a buscar: ";
+            break;
+        case 3:
+            cout << "Ingrese parte de la fecha del evento a buscar: ";
+            break;
+        default:
+            cout << "Opcion no valida.\n";
+            return;
+    }
+    getline(cin, busqueda);
+
+    bool encontrado = false;
+    for (const Evento& e : eventos) {
+        bool coincide = false;
+        switch (opcion) {
+            case 1:
+                coincide = e.nombre.find(busqueda) != string::npos;
+                break;
+            case 2:
+                coincide = e.lugar.find(busqueda) != string::npos;
+                break;
+            case 3:
+                coincide = e.fecha.find(busqueda) != string::npos;
+                break;
+        }
+// Mostrar informacion del evento encontrado.
+        if (coincide) {
+            cout << "* Evento encontrado:  *\n";
+            cout << "* Nombre:  *" << e.nombre << "\n";
+            cout << "* Descripcion: *" << e.descripcion << "\n";
+            cout << "* Fecha:  *" << e.fecha << "\n";
+            cout << "* Lugar:  *" << e.lugar << "\n";
+            cout << "* Hora:  *" << e.hora << "\n";
+            cout << "* Cantidad de Personas:  *" << e.cantidadPersonas << "\n";
+            cout << "------------------------------\n";
+            encontrado = true;
+        }
+    }
+
+    if (!encontrado) {
+        cout << "No se encontraron eventos con esos criterios.\n";
+    }
+
+    cout << "Presione Enter para continuar...";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cin.get();
+}

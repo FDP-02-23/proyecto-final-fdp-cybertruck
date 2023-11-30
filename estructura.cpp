@@ -222,3 +222,79 @@ void buscarEventosPorSimilitud() {
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     cin.get();
 }
+// Función para visualizar todas las solicitudes de eventos
+void verSolicitudesDeEvento() {
+    // Verifica si hay solicitudes de eventos para mostrar
+    if (solicitudesEventos.empty()) {
+        cout << "No hay solicitudes de eventos para mostrar.\n"; // Mensaje si la lista está vacía
+    } else {
+        // Si hay solicitudes, muestra cada una de ellas
+        cout << "Listado de todas las solicitudes de eventos:\n";
+        for (const auto& solicitud : solicitudesEventos) {
+            // Mostrar los detalles de cada solicitud de evento
+            cout << "\nSolicitud de Evento:\n";
+            cout << "Nombre: " << solicitud.nombre << "\n";
+            cout << "Descripcion: " << solicitud.descripcion << "\n";
+            cout << "Fecha: " << solicitud.fecha << "\n";
+            cout << "Lugar: " << solicitud.lugar << "\n";
+            cout << "Hora: " << solicitud.hora << "\n";
+            cout << "Cantidad de Personas: " << solicitud.cantidadPersonas << "\n";
+            cout << "Estado: " << solicitud.estado << "\n";
+        }
+    }
+
+    // Espera que el usuario presione Enter para continuar
+    cout << "\nPresione Enter para continuar...";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Limpia el buffer de entrada
+    cin.get(); // Espera a que el usuario presione Enter
+}
+// Función para enviar una solicitud de creación de un nuevo evento
+void enviarSolicitudEvento() {
+    SolicitudEvento solicitud; // Crear una nueva instancia de SolicitudEvento
+
+    // Limpiar el buffer de entrada para evitar tomar entradas previas
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    cout << "Ingrese el nombre del evento o '0' para salir: ";
+    getline(cin, solicitud.nombre); // Obtener el nombre del evento
+
+    // Si el usuario ingresa '0', sale de la función
+    if (solicitud.nombre == "0") {
+        return;
+    }
+
+    // Verificar que se haya ingresado un nombre para el evento
+    if (solicitud.nombre.empty()) {
+        cout << "No se puede crear una solicitud sin un nombre de evento.\n";
+    } else {
+        // Si se ingresó un nombre, continúa pidiendo el resto de la información
+        cout << "Ingrese la descripcion del evento: ";
+        getline(cin, solicitud.descripcion); // Obtener la descripción del evento
+
+        cout << "Ingrese la fecha del evento (formato YYYY-MM-DD): ";
+        getline(cin, solicitud.fecha); // Obtener la fecha del evento
+
+        cout << "Ingrese el lugar del evento: ";
+        getline(cin, solicitud.lugar); // Obtener el lugar del evento
+
+        cout << "Ingrese la hora del evento (formato HH:MM): ";
+        getline(cin, solicitud.hora); // Obtener la hora del evento
+
+        cout << "Ingrese la cantidad de personas esperadas: ";
+        // Obtener la cantidad de personas y verificar si la entrada es válida
+        if (!(cin >> solicitud.cantidadPersonas)) {
+            cin.clear(); // Limpia el estado de error de cin
+            cout << "Entrada invalida para la cantidad de personas.\n";
+        } else {
+            // Si la entrada es válida, establece el estado y añade la solicitud
+            solicitud.estado = "Pendiente"; // Establecer el estado de la solicitud a "Pendiente"
+            solicitudesEventos.push_back(solicitud); // Añadir la solicitud a la lista
+            cout << "Solicitud de evento enviada para revision.\n";
+        }
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Limpiar el buffer de entrada
+    }
+
+    // Espera que el usuario presione Enter para continuar
+    cout << "Presione Enter para continuar...";
+    cin.get();
+}

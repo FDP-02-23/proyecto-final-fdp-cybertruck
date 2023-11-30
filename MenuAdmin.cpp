@@ -96,3 +96,62 @@ void crearEvento() {
     cout << "Evento creado exitosamente. Presione Enter para continuar...";
     cin.get(); // Espera a que se presione Enter antes de continuar.
 }
+
+void mostrarEventos();
+
+// Función para eliminar un participante de un evento.
+void eliminarParticipante() {
+    if (eventos.empty()) {
+        cout << "No hay eventos disponibles.\n";
+        cout << "Presione Enter para continuar...";
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.get();
+        return;
+    }
+    mostrarEventos(); // Mostrar eventos disponibles.
+    cout << "Ingrese el numero del evento del cual desea eliminar un participante o '0' para salir: ";
+    int numEvento;
+    cin >> numEvento;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    if (numEvento == 0) {
+        return;
+    }
+    if (numEvento < 1 || numEvento > eventos.size()) {
+        cout << "numero de evento no valido.\n";
+        cout << "Presione Enter para continuar...";
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.get();
+        return;
+    }
+    Evento& eventoSeleccionado = eventos[numEvento - 1];
+    if (eventoSeleccionado.inscritos.empty()) {
+        cout << "No hay participantes inscritos en este evento.\n";
+        cout << "Presione Enter para continuar...";
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.get();
+        return;
+    }
+    cout << "Participantes inscritos en el evento:\n";
+    for (int i = 0; i < eventoSeleccionado.inscritos.size(); ++i) {
+        cout << i + 1 << ". " << eventoSeleccionado.inscritos[i] << endl;
+    }
+    cout << "Ingrese el numero del participante que desea eliminar o '0' para salir: ";
+    int numParticipante;
+    cin >> numParticipante;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    if (numParticipante == 0) {
+        return;
+    }
+    if (numParticipante < 1 || numParticipante > eventoSeleccionado.inscritos.size()) {
+        cout << "Numero de participante no valido.\n";
+        cout << "Presione Enter para continuar...";
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.get();
+        return;
+    }
+    eventoSeleccionado.inscritos.erase(eventoSeleccionado.inscritos.begin() + numParticipante - 1);
+    cout << "Participante eliminado exitosamente.\n";
+    cout << "Presione Enter para continuar...";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cin.get();
+}

@@ -527,3 +527,69 @@ void eliminarEvento() {
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     cin.get();
 }
+
+// Funcion que muestra el menu de administrador y permite al administrador realizar diversas acciones.
+    void menuAdmin() {
+    int opcion, index;
+    do {
+        limpiarPantalla();
+        cout << "------------------------------------------------\n";
+        cout << "Bienvenido al menu de administrador, " << usuarioActual << "\n";
+        cout << "------------------------------------------------\n";
+        cout << "* 1. Crear evento                              *\n";
+        cout << "* 2. Ver eventos                               *\n";
+        cout << "* 3. Modificar evento                          *\n";
+        cout << "* 4. Eliminar evento                           *\n";
+        cout << "* 5. Guardar eventos en archivo                *\n";
+        cout << "* 6. Mostrar personas inscritas en un evento   *\n";
+        cout << "* 7. Eliminar participante                     *\n";
+        cout << "* 8. Revisar solicitudes de evento             *\n";
+        cout << "* 9. Buscar Evento                             *\n";
+        cout << "* 0. Salir al menu principal                   *\n";
+        cout << "------------------------------------------------\n";
+        cout << "  Seleccione una opcion: ";
+        cin >> opcion;
+        limpiarPantalla();
+
+        switch (opcion) {
+            case 1:
+                crearEvento();
+                break;
+            case 2:
+                mostrarEventos();
+                break;
+            case 3:
+                modificarEvento();
+                break;
+            case 4:
+                eliminarEvento();
+                break;
+            case 5:
+                guardarEventosEnArchivo();
+                break;
+            case 6:
+                mostrarInscritosEnEvento();
+                break;
+            case 7: 
+                eliminarParticipante();
+                break;
+            case 8:
+                revisarSolicitudesEventos();
+                break;
+            case 9:
+                buscarEventosPorSimilitud();
+                break;
+            case 0:
+                return;
+            default:
+                cout << "Opcion no valida.\n";
+                cout << "Presione Enter para continuar...";
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cin.get();
+        }
+    } while (true);
+}
+int main() {
+    menuAdmin();
+    return 0;
+}

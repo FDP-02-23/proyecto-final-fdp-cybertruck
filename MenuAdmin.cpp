@@ -468,3 +468,62 @@ void revisarSolicitudesEventos() {
 
 
 
+// Funcion para mostrar los eventos en los que el usuario actual esta inscrito.
+void verEventosInscritos() {
+    cout << "Eventos en los que estas inscrito:\n";
+    bool inscritoEnAlgunEvento = false;
+    for (const Evento& e : eventos) {
+        if (find(e.inscritos.begin(), e.inscritos.end(), usuarioActual) != e.inscritos.end()) {
+            cout << "Nombre: " << e.nombre << "\n";
+            cout << "Descripcion: " << e.descripcion << "\n";
+            cout << "Fecha: " << e.fecha << "\n";
+            cout << "Lugar: " << e.lugar << "\n";
+            cout << "Hora: " << e.hora << "\n";
+            cout << "Cantidad de Personas: " << e.cantidadPersonas << "\n";
+            cout << "-----------------------\n";
+            inscritoEnAlgunEvento = true;
+        }
+    }
+    if (!inscritoEnAlgunEvento) {
+        cout << "No estas inscrito en ningun evento.\n";
+    }
+    cout << "Presione Enter para continuar...";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cin.get();
+}
+
+// Funcion para eliminar un evento de la lista de eventos
+void eliminarEvento() {
+    if (eventos.empty()) {
+        cout << "No hay eventos disponibles para eliminar.\n";
+        cout << "Presione Enter para continuar...";
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.get();
+        return;
+    }
+
+    cout << "Eventos disponibles para eliminar:\n";
+    for (int i = 0; i < eventos.size(); i++) {
+        cout << i + 1 << ". " << eventos[i].nombre << "\n";
+    }
+    cout << "0. Salir sin eliminar\n";
+
+    cout << "Seleccione el numero del evento que desea eliminar o '0' para salir: ";
+    int numeroEventoAEliminar;
+    cin >> numeroEventoAEliminar;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    if (numeroEventoAEliminar == 0) {
+        return; // Salir si el usuario elige '0'
+    } else if (numeroEventoAEliminar < 1 || numeroEventoAEliminar > eventos.size()) {
+        cout << "Numero de evento no valido.\n";
+    } else {
+        // Restar 1 porque en C++ comienzan en 0.
+        eventos.erase(eventos.begin() + numeroEventoAEliminar - 1);
+        cout << "Evento eliminado exitosamente.\n";
+    }
+
+    cout << "Presione Enter para continuar...";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cin.get();
+}

@@ -204,3 +204,85 @@ void guardarEventosEnArchivo() {
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     cin.get();
 }
+
+
+void modificarEvento() {
+    if (eventos.empty()) {
+        cout << "No hay eventos disponibles para modificar.\n";
+        cout << "Presione Enter para continuar...";
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.get();
+        return;
+    }
+    cout << "Eventos disponibles:\n";
+    for (int i = 0; i < eventos.size(); i++) {
+        cout << i + 1 << ". " << eventos[i].nombre << " - " << eventos[i].fecha << "\n";
+    }
+    cout << "0. Salir sin modificar\n";
+    int eleccion;
+    cout << "Seleccione el numero del evento que desea modificar o '0' para salir: ";
+    cin >> eleccion;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    if (eleccion == 0) {
+        return;
+    } else if (eleccion < 1 || eleccion > eventos.size()) {
+        cout << "Eleccion no valida.\n";
+        cout << "Presione Enter para continuar...";
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.get();
+        return;
+    }
+
+     // Mostrar las opciones de modificación disponibles.
+    Evento& eventoSeleccionado = eventos[eleccion - 1];
+    cout << "------------------------------------------------\n";
+    cout << "Que desea modificar del evento '" << eventoSeleccionado.nombre << "'?\n";
+    cout << "* 1. Nombre                                    *\n";
+    cout << "* 2. Descripcion                               *\n";
+    cout << "* 3. Fecha                                     *\n";
+    cout << "* 4. Lugar                                     *\n";
+    cout << "* 5. Hora                                      *\n";
+    cout << "* 6. Cantidad de Personas                      *\n";
+    cout << "------------------------------------------------\n";
+    cout << "Ingrese su elección: ";
+    int opcion;
+    cin >> opcion;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    switch (opcion) {   // Realizar la modificacion segun la eleccion del usuario
+        case 1: 
+            cout << "Ingrese el nuevo nombre: ";
+            getline(cin, eventoSeleccionado.nombre);
+            break;
+        case 2:
+            cout << "Ingrese la nueva descripción: ";
+            getline(cin, eventoSeleccionado.descripcion);
+            break;
+        case 3:
+            cout << "Ingrese la nueva fecha: ";
+            getline(cin, eventoSeleccionado.fecha);
+            break;
+        case 4:
+            cout << "Ingrese el nuevo lugar: ";
+            getline(cin, eventoSeleccionado.lugar);
+            break;
+        case 5:
+            cout << "Ingrese la nueva hora: ";
+            getline(cin, eventoSeleccionado.hora);
+            break;
+        case 6:
+            cout << "Ingrese la nueva cantidad de personas: ";
+            cin >> eventoSeleccionado.cantidadPersonas;
+            cin.ignore();
+            break;
+        default:
+            cout << "Opcion no valida.\n";
+            break;
+    }
+    if (opcion >= 1 && opcion <= 6) {
+        cout << "Evento modificado exitosamente.\n";
+    }
+    cout << "Presione Enter para continuar...";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cin.get();
+}
+

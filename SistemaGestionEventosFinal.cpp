@@ -498,3 +498,488 @@ void mostrarInscritosEnEvento() {
     cin.ignore(numeric_limits<streamsize>::max(), '\n');
     cin.get();
 }
+
+// Funcion para registrar un usuario. Recibe un booleano 'esAdmin' para determinar si el registro es para un administrador.
+void registrarUsuario(bool esAdmin) {
+    string username, password;
+
+    // Verificacion de contrasena para registrar administradores
+    if (esAdmin) {
+        string adminPassword;
+        cout << "Ingrese la contrasena de administrador o '0' para salir: ";
+        cin >> adminPassword;
+        // Si el administrador ingresa '0', se sale de la función.
+        if (adminPassword == "0") {
+            return; // Regresa al menu anterior si el usuario ingresa '0'
+        }
+        if (adminPassword != "3435") {
+            cout << "Contrasena incorrecta. No se puede registrar como administrador.\n";
+            cout << "Presione Enter para continuar...";
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cin.get();
+            return;
+        }
+    }
+  // Pedir al usuario que ingrese un nuevo nombre de usuario o '0' para salir.
+    cout << "Ingrese su nuevo nombre de usuario o '0' para salir: ";
+    cin >> username;
+    if (username == "0") {
+        return; // Regresa al menu anterior si el usuario ingresa '0'
+    }
+
+    // Verificar si el nombre de usuario ya existe
+    vector<Usuario>& listaUsuarios = esAdmin ? administradores : usuarios;
+    for (const Usuario& u : listaUsuarios) {
+        if (u.username == username) {
+            cout << "Error: El nombre de usuario ya esta en uso.\n";
+            cout << "Presione Enter para continuar...";
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cin.get();
+            return;
+        }
+    }
+// Pedir al usuario que ingrese una nueva contraseña.
+    cout << "Ingrese su nueva contrasena: ";
+    cin >> password;
+
+    Usuario nuevoUsuario = {username, password};
+    listaUsuarios.push_back(nuevoUsuario);
+
+// Mostrar un mensaje de exito y pedir al usuario que presione Enter para continuar.
+    cout << (esAdmin ? "Administrador" : "Usuario") << " registrado con exito.\n";
+    cout << "Presione Enter para continuar...";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cin.get();
+}
+
+// Función para crear un evento.
+void crearEvento() {
+    Evento e;
+
+    // Pedir al usuario ingresar el nombre del evento. '0' para salir.
+    cout << "Ingrese el nombre del evento o '0' para salir: ";
+    cin.ignore(); // Ignora el último salto de línea que quedó en el buffer de entrada.
+    getline(cin, e.nombre); // Obtiene la línea completa como nombre del evento.
+    if (e.nombre == "0") {
+        return; // Si el usuario ingresa '0', sale de la función.
+    }
+
+    // Pedir al usuario ingresar la descripción del evento. '0' para salir.
+    cout << "Ingrese la descripcion del evento o '0' para salir: ";
+    getline(cin, e.descripcion); // Obtiene la línea completa como descripción del evento.
+    if (e.descripcion == "0") {
+        return; // Si el usuario ingresa '0', sale de la función.
+    }
+
+    // Pedir al usuario ingresar la fecha del evento. '0' para salir.
+    cout << "Ingrese la fecha del evento o '0' para salir: ";
+    getline(cin, e.fecha); // Obtiene la línea completa como fecha del evento.
+    if (e.fecha == "0") {
+        return; // Si el usuario ingresa '0', sale de la función.
+    }
+
+    // Pedir al usuario ingresar el lugar del evento. '0' para salir.
+    cout << "Ingrese el lugar del evento o '0' para salir: ";
+    getline(cin, e.lugar); // Obtiene la línea completa como lugar del evento.
+    if (e.lugar == "0") {
+        return; // Si el usuario ingresa '0', sale de la función.
+    }
+
+    // Pedir al usuario ingresar la hora del evento. '0' para salir.
+    cout << "Ingrese la hora del evento o '0' para salir: ";
+    getline(cin, e.hora); // Obtiene la línea completa como hora del evento.
+    if (e.hora == "0") {
+        return; // Si el usuario ingresa '0', sale de la función.
+    }
+
+    // Pedir al usuario ingresar la cantidad de personas. '0' para salir.
+    cout << "Ingrese la cantidad de personas o '0' para salir: ";
+    if (!(cin >> e.cantidadPersonas)) { // Intenta leer un valor numérico.
+        cin.clear(); // Limpia el estado de error de cin en caso de entrada no numérica.
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignora el resto de la línea.
+        return; // Si la entrada no es numérica, sale de la función.
+    }
+    if (e.cantidadPersonas == 0) {
+        return; // Si el usuario ingresa '0', sale de la función.
+    }
+
+    cin.ignore(); // Limpia de entrada después de leer un numero.
+
+    // Añade el evento creado a la lista de eventos.
+    eventos.push_back(e);
+
+    // Muestra un mensaje de éxito y espera que el usuario presione Enter para continuar.
+    cout << "Evento creado exitosamente. Presione Enter para continuar...";
+    cin.get();
+}
+
+// Función para eliminar un participante de un evento.
+void eliminarParticipante() {
+    // Verifica si la lista de eventos esta vacía.
+    if (eventos.empty()) {
+        cout << "No hay eventos disponibles.\n";
+        cout << "Presione Enter para continuar...";
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.get();
+        return; // Sale de la funcion si no hay eventos.
+    }
+
+    mostrarEventos(); // Muestra la lista de eventos disponibles.
+
+    // Pide al usuario elegir un evento.
+    cout << "Ingrese el numero del evento del cual desea eliminar un participante o '0' para salir: ";
+    int numEvento;
+    cin >> numEvento;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Limpia el buffer de entrada.
+
+    // Opción de salida.
+    if (numEvento == 0) {
+        return; // Sale de la función si el usuario ingresa '0'.
+    }
+
+    // Verifica si el numero de evento es válido.
+    if (numEvento < 1 || numEvento > eventos.size()) {
+        cout << "Numero de evento no valido.\n";
+        cout << "Presione Enter para continuar...";
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.get();
+        return; // Sale de la funcion si el numero del evento no es válido.
+    }
+
+    // Selecciona el evento elegido por el usuario.
+    Evento& eventoSeleccionado = eventos[numEvento - 1];
+
+    // Verifica si hay participantes inscritos en el evento.
+    if (eventoSeleccionado.inscritos.empty()) {
+        cout << "No hay participantes inscritos en este evento.\n";
+        cout << "Presione Enter para continuar...";
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.get();
+        return; // Sale de la funcion si no hay participantes.
+    }
+
+    // Muestra los participantes inscritos en el evento.
+    cout << "Participantes inscritos en el evento:\n";
+    for (int i = 0; i < eventoSeleccionado.inscritos.size(); ++i) {
+        cout << i + 1 << ". " << eventoSeleccionado.inscritos[i] << endl;
+    }
+
+    // Pide al usuario elegir un participante para eliminar.
+    cout << "Ingrese el numero del participante que desea eliminar o '0' para salir: ";
+    int numParticipante;
+    cin >> numParticipante;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Limpiesa de entrada.
+
+    // Opción de salida.
+    if (numParticipante == 0) {
+        return; // Sale de la función si el usuario ingresa '0'.
+    }
+
+    // Verifica si el número del participante es valido.
+    if (numParticipante < 1 || numParticipante > eventoSeleccionado.inscritos.size()) {
+        cout << "Numero de participante no valido.\n";
+        cout << "Presione Enter para continuar...";
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.get();
+        return; // Sale de la funcion si el número del participante no es válido.
+    }
+
+    // Elimina al participante seleccionado de la lista de inscritos.
+    eventoSeleccionado.inscritos.erase(eventoSeleccionado.inscritos.begin() + numParticipante - 1);
+    cout << "Participante eliminado exitosamente.\n";
+    cout << "Presione Enter para continuar...";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cin.get();
+}
+
+// Función para mostrar los eventos disponibles.
+void mostrarEventos() {
+    // Verifica si la lista de eventos esta vacía.
+    if (eventos.empty()) {
+        cout << "No hay eventos disponibles.\n"; // Informa al usuario si no hay eventos.
+    } else {
+        // Si hay eventos, los recorre y muestra su informacion.
+        for (int i = 0; i < eventos.size(); i++) {
+            cout << "Evento " << i + 1 << ":\n"; // Muestra el número del evento.
+            cout << "Nombre: " << eventos[i].nombre << endl; // Muestra el nombre del evento.
+            cout << "Descripcion: " << eventos[i].descripcion << endl; // Muestra la descripción del evento.
+            cout << "Fecha: " << eventos[i].fecha << endl; // Muestra la fecha del evento.
+            cout << "Lugar: " << eventos[i].lugar << endl; // Muestra el lugar del evento.
+            cout << "Hora: " << eventos[i].hora << endl; // Muestra la hora del evento.
+            cout << "Cantidad de Personas: " << eventos[i].cantidadPersonas << endl; // Muestra la cantidad de personas permitidas en el evento.
+            cout << "Personas Inscritas: " << eventos[i].inscritos.size() << endl; // Muestra el numero actual de personas inscritas.
+            cout << endl; // Línea en blanco para separar eventos.
+        }
+    }
+    // Solicita al usuario presionar Enter para continuar.
+    cout << "Presione Enter para continuar...";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignora cualquier entrada previa.
+    cin.get(); // Espera a que el usuario presione Enter.
+}
+
+// Funcion para guardar los eventos en un archivo.
+void guardarEventosEnArchivo() {
+    // Crea un objeto ofstream para escribir en un archivo.
+    ofstream archivo("eventos.txt");
+
+    // Verifica si el archivo se abrio correctamente.
+    if (!archivo.is_open()) {
+        cout << "Error al abrir el archivo para escribir.\n"; // Informa al usuario si hay un error al abrir el archivo.
+        return; // Sale de la funcion si no se puede abrir el archivo.
+    }
+
+    // Recorre la lista de eventos.
+    for (const Evento& e : eventos) {
+        // Escribe la información del evento en el archivo, separada por líneas.
+        archivo << "---------------------------------------------------\n";
+        archivo << "Nombre: " << e.nombre << "\n";
+        archivo << "Descripcion: " << e.descripcion << "\n";
+        archivo << "Fecha: " << e.fecha << "\n";
+        archivo << "Lugar: " << e.lugar << "\n";
+        archivo << "Hora: " << e.hora << "\n";
+        archivo << "Cantidad de Personas: " << e.cantidadPersonas << "\n";
+        archivo << "---------------------------------------------------\n";
+    }
+
+    // Cierra el archivo después de escribir toda la información.
+    archivo.close();
+
+    // Informa al usuario que los eventos han sido guardados y espera una tecla para continuar.
+    cout << "Eventos guardados en 'eventos.txt'.\n";
+    cout << "Presione Enter para continuar...";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Limpiesa de entrada.
+    cin.get(); // Espera que el usuario presione Enter.
+}
+
+// Funcion para modificar un evento existente.
+void modificarEvento() {
+    // Verifica si la lista de eventos esta vacia.
+    if (eventos.empty()) {
+        cout << "No hay eventos disponibles para modificar.\n";
+        cout << "Presione Enter para continuar...";
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.get();
+        return; // Sale de la funcion si no hay eventos.
+    }
+
+    // Muestra los eventos disponibles para modificar.
+    cout << "Eventos disponibles:\n";
+    for (int i = 0; i < eventos.size(); i++) {
+        cout << i + 1 << ". " << eventos[i].nombre << " - " << eventos[i].fecha << "\n";
+    }
+    cout << "0. Salir sin modificar\n";
+
+    // Pide al usuario elegir un evento para modificar.
+    int eleccion;
+    cout << "Seleccione el numero del evento que desea modificar o '0' para salir: ";
+    cin >> eleccion;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    // Verifica la eleccion del usuario.
+    if (eleccion == 0) {
+        return; // Sale de la funcion si el usuario elige '0'.
+    } else if (eleccion < 1 || eleccion > eventos.size()) {
+        cout << "Eleccion no valida.\n";
+        cout << "Presione Enter para continuar...";
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.get();
+        return; // Sale de la funcion si la eleccion es invalida.
+    }
+
+    // Selecciona el evento a modificar.
+    Evento& eventoSeleccionado = eventos[eleccion - 1];
+
+    // Muestra las opciones de modificacion.
+    cout << "------------------------------------------------\n";
+    cout << "Que desea modificar del evento '" << eventoSeleccionado.nombre << "'?\n";
+    cout << "* 1. Nombre                                    *\n";
+    cout << "* 2. Descripcion                               *\n";
+    cout << "* 3. Fecha                                     *\n";
+    cout << "* 4. Lugar                                     *\n";
+    cout << "* 5. Hora                                      *\n";
+    cout << "* 6. Cantidad de Personas                      *\n";
+    cout << "------------------------------------------------\n";
+    cout << "Ingrese su elección: ";
+    int opcion;
+    cin >> opcion;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    // Modifica el evento segun la opcion seleccionada.
+    switch (opcion) {
+        case 1:
+            cout << "Ingrese el nuevo nombre: ";
+            getline(cin, eventoSeleccionado.nombre);
+            break;
+        case 2:
+            cout << "Ingrese la nueva descripcion: ";
+            getline(cin, eventoSeleccionado.descripcion);
+            break;
+        case 3:
+            cout << "Ingrese la nueva fecha: ";
+            getline(cin, eventoSeleccionado.fecha);
+            break;
+        case 4:
+            cout << "Ingrese el nuevo lugar: ";
+            getline(cin, eventoSeleccionado.lugar);
+            break;
+        case 5:
+            cout << "Ingrese la nueva hora: ";
+            getline(cin, eventoSeleccionado.hora);
+            break;
+        case 6:
+            cout << "Ingrese la nueva cantidad de personas: ";
+            cin >> eventoSeleccionado.cantidadPersonas;
+            cin.ignore();
+            break;
+        default:
+            cout << "Opcion no valida.\n";
+            break;
+    }
+
+    // Confirma la modificacion si se eligio una opcion valida.
+    if (opcion >= 1 && opcion <= 6) {
+        cout << "Evento modificado exitosamente.\n";
+    }
+
+    // Espera a que el usuario presione Enter para continuar.
+    cout << "Presione Enter para continuar...";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cin.get();
+}
+
+// Función para mostrar los eventos en los que el usuario actual está inscrito.
+void verEventosInscritos() {
+    cout << "Eventos en los que estás inscrito:\n";
+    bool inscritoEnAlgunEvento = false;
+
+    // Recorre todos los eventos para verificar si el usuario actual está inscrito.
+    for (const Evento& e : eventos) {
+        // Comprueba si el usuario está inscrito en el evento.
+        if (find(e.inscritos.begin(), e.inscritos.end(), usuarioActual) != e.inscritos.end()) {
+            // Muestra la información del evento.
+            cout << "Nombre: " << e.nombre << "\n";
+            cout << "Descripcion: " << e.descripcion << "\n";
+            cout << "Fecha: " << e.fecha << "\n";
+            cout << "Lugar: " << e.lugar << "\n";
+            cout << "Hora: " << e.hora << "\n";
+            cout << "Cantidad de Personas: " << e.cantidadPersonas << "\n";
+            cout << "-----------------------\n";
+            inscritoEnAlgunEvento = true;
+        }
+    }
+
+    // Si el usuario no está inscrito en ningun evento, muestra un mensaje.
+    if (!inscritoEnAlgunEvento) {
+        cout << "No estas inscrito en ningun evento.\n";
+    }
+
+    // Espera a que el usuario presione Enter para continuar.
+    cout << "Presione Enter para continuar...";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cin.get();
+}
+
+// Función para eliminar un evento de la lista de eventos disponibles.
+void eliminarEvento() {
+    // Verifica si hay eventos disponibles para eliminar.
+    if (eventos.empty()) {
+        cout << "No hay eventos disponibles para eliminar.\n";
+        cout << "Presione Enter para continuar...";
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.get();
+        return;
+    }
+
+    // Muestra los eventos disponibles para eliminar.
+    cout << "Eventos disponibles para eliminar:\n";
+    for (int i = 0; i < eventos.size(); i++) {
+        cout << i + 1 << ". " << eventos[i].nombre << "\n";
+    }
+    cout << "0. Salir sin eliminar\n";
+
+    // Pide al usuario seleccionar un evento para eliminar.
+    cout << "Seleccione el numero del evento que desea eliminar o '0' para salir: ";
+    int numeroEventoAEliminar;
+    cin >> numeroEventoAEliminar;
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+
+    // Verifica la seleccion del usuario.
+    if (numeroEventoAEliminar == 0) {
+        return; // Sale de la funcion si el usuario elige '0'.
+    } else if (numeroEventoAEliminar < 1 || numeroEventoAEliminar > eventos.size()) {
+        cout << "Numero de evento no valido.\n";
+    } else {
+        // Elimina el evento elegido de la lista.
+        eventos.erase(eventos.begin() + numeroEventoAEliminar - 1);
+        cout << "Evento eliminado exitosamente.\n";
+    }
+
+    // Espera a que el usuario presione Enter para continuar.
+    cout << "Presione Enter para continuar...";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cin.get();
+}
+
+// Funcion para mostrar el menú de administrador y manejar las opciones seleccionadas.
+void menuAdmin() {
+    int opcion;
+    do {
+        limpiarPantalla(); // Limpia la pantalla para mostrar el menú.
+        // Muestra las opciones del menu.
+        cout << "------------------------------------------------\n";
+        cout << "Bienvenido al menu de administrador, " << usuarioActual << "\n";
+        cout << "------------------------------------------------\n";
+        cout << "* 1. Crear evento                              *\n";
+        cout << "* 2. Ver eventos                               *\n";
+        cout << "* 3. Modificar evento                          *\n";
+        cout << "* 4. Eliminar evento                           *\n";
+        cout << "* 5. Guardar eventos en archivo                *\n";
+        cout << "* 6. Mostrar personas inscritas en un evento   *\n";
+        cout << "* 7. Eliminar participante                     *\n";
+        cout << "* 8. Revisar solicitudes de evento             *\n";
+        cout << "* 9. buscar Evento                             *\n";
+        cout << "* 0. Salir al menu principal                   *\n";
+        cout << "------------------------------------------------\n";
+        cout << "  Seleccione una opcion: ";
+        cin >> opcion; // Recibe la opción del usuario.
+        limpiarPantalla(); // Limpia la pantalla tras la selección.
+
+        // Ejecuta la acción correspondiente a la opción seleccionada.
+        switch (opcion) {
+            case 1:
+                crearEvento(); // Crea un nuevo evento.
+                break;
+            case 2:
+                mostrarEventos(); // Muestra los eventos existentes.
+                break;
+            case 3:
+                modificarEvento(); // Modifica un evento existente.
+                break;
+            case 4:
+                eliminarEvento(); // Elimina un evento.
+                break;
+            case 5:
+                guardarEventosEnArchivo(); // Guarda los eventos en un archivo.
+                break;
+            case 6:
+                mostrarInscritosEnEvento(); // Muestra los inscritos en un evento.
+                break;
+            case 7: 
+                eliminarParticipante(); // Elimina un participante de un evento.
+                break;
+            case 8:
+                revisarSolicitudesEventos(); // Revisa solicitudes para eventos.
+                break;
+            case 9:
+                buscarEventosPorSimilitud(); // Busca eventos por similitud.
+                break;
+            case 0:
+                return; // Regresa al menu principal.
+            default:
+                cout << "Opcion no valida.\n"; // Maneja opciones no validas.
+                cout << "Presione Enter para continuar...";
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cin.get();
+        }
+    } while (true); // El menu se ejecuta en un bucle hasta que el usuario decide salir.
+}

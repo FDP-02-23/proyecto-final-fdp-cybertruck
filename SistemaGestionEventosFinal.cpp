@@ -983,3 +983,164 @@ void menuAdmin() {
         }
     } while (true); // El menu se ejecuta en un bucle hasta que el usuario decide salir.
 }
+// Función para buscar eventos por nombre.
+void buscarEventos() {
+    // Verifica si hay eventos disponibles para buscar.
+    if (eventos.empty()) {
+        cout << "No hay eventos disponibles para buscar.\n";
+        cout << "Presione Enter para continuar...";
+        cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        cin.get();
+        return;
+    }
+
+    // Pide al usuario ingresar el nombre del evento a buscar.
+    cout << "Ingrese el nombre del evento a buscar: ";
+    string nombreBusqueda;
+    cin.ignore();
+    getline(cin, nombreBusqueda);
+
+    bool encontrado = false;
+    // Recorre la lista de eventos para buscar coincidencias.
+    for (const Evento& e : eventos) {
+        // Comprueba si el nombre del evento contiene la cadena buscada.
+        if (e.nombre.find(nombreBusqueda) != string::npos) {
+            // Muestra la información del evento encontrado.
+            cout << "------------------------------------------------\n";
+            cout << "Evento encontrado:\n";
+            cout << "Nombre: " << e.nombre << "\n";
+            cout << "Descripción: " << e.descripcion << "\n";
+            cout << "Fecha: " << e.fecha << "\n";
+            cout << "Lugar: " << e.lugar << "\n";
+            cout << "Hora: " << e.hora << "\n";
+            cout << "Cantidad de Personas: " << e.cantidadPersonas << "\n";
+            cout << "------------------------------------------------\n";
+            encontrado = true;
+            break; // Detiene la búsqueda después de encontrar el primer evento coincidente.
+        }
+    }
+
+    // Informa si no se encontraron eventos con el nombre buscado.
+    if (!encontrado) {
+        cout << "No se encontraron eventos con ese nombre.\n";
+    }
+
+    // Espera a que el usuario presione Enter para continuar.
+    cout << "Presione Enter para continuar...";
+    cin.ignore(numeric_limits<streamsize>::max(), '\n');
+    cin.get();
+}
+
+// Función para mostrar el menu de usuario y manejar las opciones seleccionadas.
+void menuUsuario() {
+    int opcion;
+    do {
+        limpiarPantalla(); // Limpia la pantalla para mostrar el menú de usuario.
+        // Muestra las opciones del menú.
+        cout << "--------------------------------------------------\n";
+        cout << " Bienvenido al menu de usuario, " << usuarioActual << "\n";
+        cout << "--------------------------------------------------\n";
+        cout << "* 1. Ver eventos                                 *\n";
+        cout << "* 2. Buscar evento por similitud                 *\n";
+        cout << "* 3. Inscribirse en un evento                    *\n";
+        cout << "* 4. ver eventos inscritos                       *\n";
+        cout << "* 5. Enviar solicitud de evento                  *\n";
+        cout << "* 6. ver solicitudes de evento                   *\n";      
+        cout << "* 0. Salir al menu principal                     *\n";
+        cout << "--------------------------------------------------\n";
+        cout << " Seleccione una opcion: ";
+        cin >> opcion; // Recibe la opción del usuario.
+        limpiarPantalla(); // Limpia la pantalla tras la selección.
+
+        // Ejecuta la acción correspondiente a la opción seleccionada.
+        switch (opcion) {
+            case 1:
+                mostrarEventos(); // Muestra los eventos disponibles.
+                break;
+            case 2:
+                buscarEventosPorSimilitud(); // Busca eventos por similitud.
+                break;
+            case 3:
+                inscribirseEnEvento(); // Permite al usuario inscribirse en un evento.
+                break;
+             case 4:
+                verEventosInscritos(); // Muestra los eventos en los que el usuario está inscrito.
+                break;
+            case 5:
+               enviarSolicitudEvento(); // Permite al usuario enviar una solicitud para un nuevo evento.
+               break;
+            case 6:
+               verSolicitudesDeEvento(); // Muestra las solicitudes de eventos realizadas por el usuario.
+               break;
+            case 0:
+                return; // Regresa al menú principal.
+            default:
+                cout << "Opcion no valida.\n"; // Maneja opciones no válidas.
+                cout << "Presione Enter para continuar...";
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cin.get();
+        }
+    } while (true); // El menu se ejecuta en un bucle hasta que el usuario decide salir.
+}
+
+// Punto de entrada principal del programa.
+int main() {
+    
+    // Añade un administrador por defecto al sistema.
+    administradores.push_back(Usuario{"Darwin", "3435"});
+
+    int opcion;
+    do {
+        limpiarPantalla(); // Limpia la pantalla para mostrar el menú principal.
+        // Muestra el menú principal con las opciones disponibles.
+        cout << "------------------------------------------------\n";
+        cout << "* Bienvenido al Sistema de Gestion de Eventos  *\n";
+        cout << "------------------------------------------------\n";
+        cout << "* 1. Iniciar sesion como administrador         *\n";
+        cout << "* 2. Iniciar sesion como usuario               *\n";
+        cout << "* 3. Registrar administrador                   *\n";
+        cout << "* 4. Registrar usuario                         *\n";
+        cout << "* 5. Salir del programa                        *\n";
+        cout << "------------------------------------------------\n";
+        cout << "Seleccione una opcion: ";
+
+        cin >> opcion; // Recibe la opción del usuario.
+        limpiarPantalla(); // Limpia la pantalla tras la selección.
+
+        // Ejecuta la acción correspondiente a la opción seleccionada.
+        switch (opcion) {
+            case 1:
+                // Inicia sesión como administrador y muestra el menú de administrador.
+                if (iniciarSesion(true)) {
+                    menuAdmin();
+                }
+                break;
+            case 2:
+                // Inicia sesión como usuario regular y muestra el menú de usuario.
+                if (iniciarSesion(false)) {
+                    menuUsuario();
+                }
+                break;
+            case 3:
+                // Registra un nuevo administrador.
+                registrarUsuario(true);
+                break;
+            case 4:
+                // Registra un nuevo usuario.
+                registrarUsuario(false);
+                break;
+            case 5:
+                // Sale del programa.
+                cout << "Saliendo del programa.\n";
+                return 0;
+            default:
+                // Maneja opciones no válidas.
+                cout << "Opcion no valida.\n";
+                cout << "Presione Enter para continuar...";
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                cin.get();
+        }
+    } while (true); // El menú se ejecuta en un bucle hasta que el usuario decide salir.
+
+    return 0;
+}
